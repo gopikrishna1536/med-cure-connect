@@ -43,9 +43,20 @@ interface Order {
   };
 }
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  created_at: string;
+  user_roles: {
+    role: string;
+  }[];
+}
+
 const AdminDashboard = () => {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [editingMedicine, setEditingMedicine] = useState<Medicine | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -69,6 +80,7 @@ const AdminDashboard = () => {
     }
     fetchMedicines();
     fetchOrders();
+    fetchUsers();
   }, [user, isAdmin, navigate]);
 
   const fetchMedicines = async () => {
@@ -88,6 +100,17 @@ const AdminDashboard = () => {
       `)
       .order('order_date', { ascending: false });
     setOrders(data as any || []);
+  };
+
+  const fetchUsers = async () => {
+    const { data } = await supabase
+      .from('profiles')
+      .select(`
+        *,
+        user_roles (role)
+      `)
+      .order('created_at', { ascending: false });
+    setUsers(data as any || []);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -203,6 +226,7 @@ const AdminDashboard = () => {
           <TabsList>
             <TabsTrigger value="medicines">Medicines</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
           </TabsList>
 
           <TabsContent value="medicines">
@@ -381,6 +405,47 @@ const AdminDashboard = () => {
                           <span className="px-2 py-1 rounded-full text-xs bg-success/10 text-success">
                             {order.payment_status}
                           </span>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="users">
+            <Card>
+              <CardHeader>
+                <CardTitle>User Management</CardTitle>
+                <CardDescription>View all registered users</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Username</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Joined</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">{user.username}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            user.user_roles[0]?.role === 'admin' 
+                              ? 'bg-primary/10 text-primary' 
+                              : 'bg-muted text-muted-foreground'
+                          }`}>
+                            {user.user_roles[0]?.role || 'user'}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {new Date(user.created_at).toLocaleDateString()}
                         </TableCell>
                       </TableRow>
                     ))}
