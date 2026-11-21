@@ -1,73 +1,122 @@
-# Welcome to your Lovable project
+# MedCure Connect — Digital Pharmacy & Healthcare Portal
 
-## Project info
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL%20Auth-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-**URL**: https://lovable.dev/projects/346833c0-ad8b-43b9-9d43-2718e70a1970
+A modern, full-featured digital pharmacy and healthcare management platform built with React, TypeScript, Tailwind CSS, and Supabase. Features prescription uploads, medicine catalog search, shopping cart and checkout, order fulfillment tracking, and administrative controls.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## ✨ Features
 
-**Use Lovable**
+- **Prescription Upload System:** Secure document and image uploading workflow for doctor prescriptions with pharmacist verification.
+- **Medicine Catalog & Filtering:** Searchable pharmaceutical inventory with dosage details, manufacturer info, pricing, and category filters.
+- **Cart & Order Checkout:** Real-time shopping cart state, order summary calculation, address management, and order placement.
+- **Role-Based Authentication:** Patient and Administrator access levels powered by Supabase Auth with Row Level Security (RLS).
+- **Admin Management Dashboard:** Administrative views to monitor prescription verification, incoming patient orders, inventory levels, and customer inquiries.
+- **Responsive UI:** Built with Tailwind CSS and Radix UI primitives for full mobile and desktop responsiveness.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/346833c0-ad8b-43b9-9d43-2718e70a1970) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🏛️ System Architecture
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+┌────────────────────────────────────────────────────────┐
+│                   React + Vite SPA                     │
+│  (Catalog, Cart, Prescription Upload, Admin Dashboard) │
+└───────────────────────────┬────────────────────────────┘
+                            │
+              REST / Realtime WebSocket API
+                            │
+┌───────────────────────────▼────────────────────────────┐
+│                    Supabase Backend                    │
+│   • Auth (JWT, email/password)                         │
+│   • PostgreSQL Database (Products, Orders, Profiles)   │
+│   • Storage Buckets (Prescription PDF & Image Files)   │
+│   • Row Level Security (RLS Policies)                  │
+└────────────────────────────────────────────────────────┘
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📂 Project Structure
 
-**Use GitHub Codespaces**
+```
+med-cure-connect/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                     # GitHub Actions CI automated build pipeline
+├── src/
+│   ├── components/                    # Reusable UI components & dialogs
+│   ├── contexts/                      # React contexts (CartContext, AuthContext)
+│   ├── hooks/                         # Custom React hooks
+│   ├── integrations/
+│   │   └── supabase/                  # Supabase client & generated type definitions
+│   ├── lib/                           # Utility functions & formatting helpers
+│   ├── pages/
+│   │   ├── AdminDashboard.tsx         # Order and prescription management
+│   │   ├── Auth.tsx                   # User login and sign-up
+│   │   ├── Cart.tsx                   # Shopping cart review
+│   │   ├── Catalog.tsx                # Searchable pharmaceutical catalog
+│   │   ├── Checkout.tsx               # Shipping & order payment
+│   │   ├── Index.tsx                  # Landing homepage & features
+│   │   ├── OrderConfirmation.tsx      # Post-checkout order tracking
+│   │   └── UploadPrescription.tsx     # Prescription upload & verification
+│   ├── App.tsx                        # Main application routes
+│   └── main.tsx                       # Entry point
+├── supabase/                          # Database migrations and schema definitions
+├── .env.example                       # Environment configuration template
+├── package.json                       # Dependencies & build scripts
+└── README.md                          # Documentation
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🚀 Getting Started
 
-This project is built with:
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or bun
+- A Supabase account and project
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Installation
 
-## How can I deploy this project?
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/gopikrishna1536/med-cure-connect.git
+   cd med-cure-connect
+   ```
 
-Simply open [Lovable](https://lovable.dev/projects/346833c0-ad8b-43b9-9d43-2718e70a1970) and click on Share -> Publish.
+2. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   ```
+   Update `.env` with your Supabase credentials:
+   ```env
+   VITE_SUPABASE_URL=https://your-project.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_anon_key
+   VITE_SUPABASE_PROJECT_ID=your_project_id
+   ```
 
-## Can I connect a custom domain to my Lovable project?
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-Yes, you can!
+4. **Launch development server:**
+   ```bash
+   npm run dev
+   ```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+5. **Build for production:**
+   ```bash
+   npm run build
+   ```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## 📄 License
+MIT License.
